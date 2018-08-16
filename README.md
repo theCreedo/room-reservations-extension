@@ -32,6 +32,11 @@ Correct `oauth.js` file format:
   };
 ```
 
+- [chrome.storage](https://developer.chrome.com/extensions/storage)
+
+- [Stack Overflow for Chome Extension writing to Google Spreadsheet](https://stackoverflow.com/questions/20450438/chrome-extension-writing-to-google-spreadsheet)
+
+-[Google Spreadsheet Loader Github Library](https://github.com/vkadam/gsloader)
 
 # Self-Made Notes
 May need to learn React, but for now, I just want to get a base product running
@@ -40,8 +45,12 @@ May need to learn React, but for now, I just want to get a base product running
 # Log
 
 8/16/2018
-Created Design Specifications for MVP and created a checklist.
-Went through Google's OAuth 2.0 tutorial and solved 1+hour json formatting bug.
+
+- Created Design Specifications for MVP and created a checklist.
+
+- Went through Google's OAuth 2.0 tutorial and solved 1+hour json formatting bug.
+
+- Added 'storage' permissions in order to save token for OAuth 2.0
 
 
 
