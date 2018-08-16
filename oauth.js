@@ -15,7 +15,9 @@
 	    // Create the spreedsheets
     });
   };
-  
+
+// ----------------------------------------
+
   // Client ID and API key from the Developer Console
   var CLIENT_ID = '<YOUR_CLIENT_ID>';
   var API_KEY = '<YOUR_API_KEY>';

@@ -42,6 +42,8 @@ Correct `oauth.js` file format:
   };
 ```
 
+- [Google Sheets Browser Quickstart](https://developers.google.com/sheets/api/quickstart/js)
+
 - [chrome.storage](https://developer.chrome.com/extensions/storage)
 
 - [Stack Overflow for Chome Extension writing to Google Spreadsheet](https://stackoverflow.com/questions/20450438/chrome-extension-writing-to-google-spreadsheet)
@@ -69,11 +71,7 @@ How do I read form data into data
 
 - TODO: Need to make decision on either using Google Sheets api or other outside tutorial work
 
-
-
-
-
-
+- TODO: Need to learn to make POST requests in Javascript
 
 
 
