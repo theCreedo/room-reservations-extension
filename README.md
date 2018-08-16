@@ -6,10 +6,20 @@ MVP Goal #1:
 Read the University room reservation website for room reservation data, create a google sheets (need to be authed) and send that formatted data into the sheets
 
 Checklist:
-[] - Google OAuth 2.0
-[] - Read html data from Room Reservations Website
-[] - Create Excel Spreadsheet
-[] - Format and set data to saved Excel Spreadsheet
+- [] - Google OAuth 2.0
+- [] - Read html data from Room Reservations Website
+- [] - Create Excel Spreadsheet
+- [] - Format and set data to saved Excel Spreadsheet
+
+Supported Reservation Sites:
+- [] - [Dean Of Students](https://deanofstudents.utexas.edu/secure/sa/roomapp.php)
+
+- [] - [Event Space Reservations](https://ems.universityunions.utexas.edu/VirtualEms/) - Union, SAC, HMA, SSB, Outdoor
+
+Design:
+- OAuth flow to get Token
+- createSpreedsheet function
+- button to read data from html
 
 # Getting Started
 
@@ -36,11 +46,14 @@ Correct `oauth.js` file format:
 
 - [Stack Overflow for Chome Extension writing to Google Spreadsheet](https://stackoverflow.com/questions/20450438/chrome-extension-writing-to-google-spreadsheet)
 
--[Google Spreadsheet Loader Github Library](https://github.com/vkadam/gsloader)
+- [Google Spreadsheet Loader Github Library](https://github.com/vkadam/gsloader)
+
+- [Get Source HTML of current page from chrome extension StackOverflow](
+https://stackoverflow.com/questions/11684454/getting-the-source-html-of-the-current-page-from-chrome-extension)
 
 # Self-Made Notes
 May need to learn React, but for now, I just want to get a base product running
-
+How do I read form data into data
 
 # Log
 
@@ -52,7 +65,9 @@ May need to learn React, but for now, I just want to get a base product running
 
 - Added 'storage' permissions in order to save token for OAuth 2.0
 
+- Worked a bit on Design
 
+- TODO: Need to make decision on either using Google Sheets api or other outside tutorial work
 
 
 
