@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+
+  "name": "Room Reservations Manager",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqLxgEx50NL4p4win3XkKVfWLuChW+fl1yw81Bc/OmR1+POeoyP4lTScHLJEQ6bPruW+fj0NfvVMyatoTvy3WBnK1sPztvdNcPrzOWK5WiL4Mf8HjdVL9j5QfuFOWG3DAjH1yikpOfHevNY4QeeO1Ppicw+OdVztoy3ZNptw2QycYyDnCk/3Ke76zBamiZavEvqD2qzVs3KIGOcaC8b4O+f/pnAumL9zqDkYAoMGjTA7Eqob9+5ee0BY8IoksNFzuFdAlCx2pxcTo2JWNk+EZl3/07UVkxBMoTQ9vvto6uI5zRSrlRdCWmi8Xl/UelbPAQvCDz/xXZGgIznU+I0/6LwIDAQAB",
+  "description": "This extension will help UT student organizations manage room reservations they have.",
+  "version": "1.0",
+
+  "browser_action": {
+   "default_icon": "icon.png",
+   "default_popup": "popup.html"
+  },
+  "oauth2": {
+    "client_id": "48725709994-11dd76opgd4l5ijkvpuc8k7frkauksqd.apps.googleusercontent.com",
+    "scopes":[
+      "https://www.googleapis.com/auth/drive"
+    ]
+  },
+  "permissions": [
+   "identity"
+   ],
+    "background": {
+      "scripts": [
+        "background.js"
+      ],
+      "persistent": false
+    }
+}
