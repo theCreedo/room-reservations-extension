@@ -8,7 +8,7 @@ window.onload = function() {
 		// OAuth if needed
 
 		// Format data into excel format
-		
+
 	});
 }
 
@@ -47,6 +47,26 @@ function getDeanFormData() {
 	var proposed_use = document.getElementById('proposed_use').value;
 
 	var room_capacity =document.getElementById('number_expected').value;
+	var startHour = parseInt($('#startHour option:selected').text());
+	var startMinute = $('#startMinute option:selected').text();
+	var startSuffix = $('#startSuffix option:selected').text();
+	var startTime = ''
+	if (startSuffix == 'noon') {
+		startTime = '12:00PM';
+	} else {
+		startTime = startHour + ':' + startMinute + startSuffix.toUpperCase().replaceAll(".", "");
+	}
+
+	var endHour = parseInt($('#endHour option:selected').text());
+	var endMinute = $('#endMinute option:selected').text()
+	var endSuffix = $('#endSuffix option:selected').text();
+	var endTime = ''
+	if (endSuffix == 'noon') {
+		endTime = '12:00PM';
+	} else {
+		endTime =  endHour + ':' + endMinute + endSuffix.toUpperCase().replaceAll(".", "");
+	}
+
 
 	var isRepeating = $('#restype1').is(':checked');
 	var isHostSpeaker = $('#bOffCampusSpeaker1').is(':checked');
@@ -65,18 +85,24 @@ function getDeanFormData() {
 
 	var data = {
 		'orgname': orgName,
-		'rep': rep,
-		'rep_phone_number': rep_phone_number,
-		'rep_email': rep_email,
+		'repData' : {
+			'rep_name': rep,
+			'rep_phone_number': rep_phone_number,
+			'rep_email': rep_email,
+		},
 		'buildings': listOfBuildings,
 		'proposed_user': proposed_use,
-		"room_capacity": room_capacity,
+		'room_capacity': room_capacity,
+		'times' : {
+			'startTime': startTime,
+			'endTime': endTime,
+		},
 		'reservationDatesData': reservationDatesData,
 		'hostSpeakerData': hostSpeakerData,
 		'cosponsorData': cosponsorData,
 		'collectingMoneyData': collectingMoneyData,
 		'distributingFoodData': distributingFoodData,
-		"additional_comments": additional_comments
+		'additional_comments': additional_comments
 	};
 
 	return data;
@@ -134,6 +160,10 @@ function getReservationDates(isRepeating) {
 			 document.getElementById('eigthDate').value,
 			 document.getElementById('ninthDate').value
 		];
+
+		var dateFrom = document.getElementById('dateFrom').value;
+		var dateTo = document.getElementById('dateTo').value;
+
 
 		var data = {
 			'dates':listOfDates
@@ -205,3 +235,14 @@ function getDistributingFoodData(isDistributingFood) {
 	
 	return null;
 }
+
+String.prototype.replaceAll = function(search, replace)
+{
+    //if replace is not sent, return original string otherwise it will
+    //replace search string with 'undefined'.
+    if (replace === undefined) {
+        return this.toString();
+    }
+
+    return this.replace(new RegExp('[' + search + ']', 'g'), replace);
+};

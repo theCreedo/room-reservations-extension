@@ -44,7 +44,9 @@ Correct `oauth.js` file format:
 
 - [Google Sheets Browser Quickstart](https://developers.google.com/sheets/api/quickstart/js)
 
-- [chrome.storage](https://developer.chrome.com/extensions/storage)
+- [Append Row to Sheets](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/request#appendcellsrequest)
+
+- [chrome.storage](https://developer.chrome.com/extensions/storage) - Didn't use
 
 - [Stack Overflow for Chome Extension writing to Google Spreadsheet](https://stackoverflow.com/questions/20450438/chrome-extension-writing-to-google-spreadsheet)
 
@@ -58,6 +60,20 @@ May need to learn React, but for now, I just want to get a base product running
 How do I read form data into data
 
 # Log
+
+8/17/2018
+
+- Made Dean of Students Reservation data way more cleaner
+
+- Redesigned chrome extension so that it displays 'Authorize Google' and 'Create Spreadsheet'
+
+- Used Google Sheets API to create spreadsheet
+
+- TODO: Find a way to save created  id and such and make the button to create Spreadsheet unclickable
+
+- TODO: Create row data to send to google spreadsheet
+
+- TODO: Add eventListener for Submitting room app to send data to spreadsheet
 
 8/16/2018
 
@@ -74,8 +90,5 @@ How do I read form data into data
 - TODO: Need to make decision on either using Google Sheets api or other outside tutorial work
 
 - TODO: Need to learn to make POST requests in Javascript
-
-
-
 
 
