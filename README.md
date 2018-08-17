@@ -67,7 +67,9 @@ How do I read form data into data
 
 - Added 'storage' permissions in order to save token for OAuth 2.0
 
-- Worked a bit on Design
+- Worked a bit on feature designs
+
+- Added Dean of Students Reservation form data getter
 
 - TODO: Need to make decision on either using Google Sheets api or other outside tutorial work
 

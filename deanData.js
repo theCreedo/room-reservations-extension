@@ -1,11 +1,14 @@
-
-
 window.onload = function() {
 
 	// This runs when id=submitRoomapp gets hit
 	document.getElementById('submitRoomapp').addEventListener('click', function() {
 		// Get all form data together
 		var data = getDeanFormData();
+
+		// OAuth if needed
+
+		// Format data into excel format
+		
 	});
 }
 
@@ -53,7 +56,7 @@ function getDeanFormData() {
 
 	var reservationDatesData = getReservationDates(isRepeating);
 	var hostSpeakerData = getHostSpeakerData(isHostSpeaker);
-	var cosponsoredData = getCosponsoreData(isCosponsored);
+	var cosponsorData = getCosponsorData(isCosponsored);
 	var collectingMoneyData = getCollectingMoneyData(isCollectingMoney);
 	var distributingFoodData = getDistributingFoodData(isDistributingFood);
 
@@ -70,7 +73,7 @@ function getDeanFormData() {
 		"room_capacity": room_capacity,
 		'reservationDatesData': reservationDatesData,
 		'hostSpeakerData': hostSpeakerData,
-		'cosponsoredData': cosponsoredData,
+		'cosponsorData': cosponsorData,
 		'collectingMoneyData': collectingMoneyData,
 		'distributingFoodData': distributingFoodData,
 		"additional_comments": additional_comments
@@ -101,10 +104,21 @@ function getReservationDates(isRepeating) {
 		var isFri = $('#proposed_day6').is(':checked');
 		var isSat = $('#proposed_day7').is(':checked');
 
+		var listOfDays = {
+			isSun,
+			isMon,
+			isTues,
+			isWed,
+			isThur,
+			isFri,
+			isSat
+		}
+
 		var dateFrom = document.getElementById('dateFrom').value;
 		var dateTo = document.getElementById('dateTo').value;
 
 		var data = {
+			'listOfDays': listOfDays, 
 			'dateFrom':dateFrom,
 			'dateFrom':dateTo
 		}
@@ -129,37 +143,50 @@ function getReservationDates(isRepeating) {
 	return data
 }
 
-	function getHostSpeakerData(isRepeating) {
-	if (isRepeating) {
-		// implementation of data collection
-		return null;
-	}
-
-	return null;
-}
-
-function getCosponsoreData(isHostSpeaker) {
+function getHostSpeakerData(isHostSpeaker) {
 	if (isHostSpeaker) {
 		// implementation of data collection
-		return null;
+		var speakerAffiliation = document.getElementById('speakercomp').value;
+		var speakerName = document.getElementById('SpeakerName').value;
+		var isSpeakerQuestions = $('#bSpeakerQuestions1').is(':checked');
+		var speakerTopic = document.getElementById('SpeakerTopic').value;
+
+		var speakerData = {
+			'speakerAffiliation': speakerAffiliation,
+			'speakerName': speakerName,
+			'isSpeakerQuestions': isSpeakerQuestions,
+			'speakerTopic': speakerTopic
+		}
+
+		return speakerData;
 	}
 
 	return null;
 }
 
-function getCosponsoreData(isCosponsored) {
+function getCosponsorData(isCosponsored) {
 	if (isCosponsored) {
 		// implementation of data collection
-		return null;
+		var cosponsors = document.getElementById('co_sponsors').value;
+
+		var cosponsorData = {
+			'cosponsors': cosponsors
+		}
+		return cosponsorData;
 	}
-	
+
 	return null;
 }
 
 function getCollectingMoneyData(isCollectingMoney) {
 	if (isCollectingMoney) {
 		// implementation of data collection
-		return null;
+		var solicitation_desc = document.getElementById('solicitation_type').value;
+
+		var collectingMoneyData = {
+			'solicitation_desc': solicitation_desc
+		}
+		return collectingMoneyData;
 	}
 	
 	return null;
@@ -168,7 +195,12 @@ function getCollectingMoneyData(isCollectingMoney) {
 function getDistributingFoodData(isDistributingFood) {
 	if (isDistributingFood) {
 		// implementation of data collection
-		return null;
+		var distribution_descp = document.getElementById('describe_food').value;
+
+		var distributionData = {
+			'distribution_descp': distribution_descp
+		}
+		return distributionData;
 	}
 	
 	return null;
