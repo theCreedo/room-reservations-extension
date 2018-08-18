@@ -16,10 +16,17 @@
       "https://www.googleapis.com/auth/drive"
     ]
   },
+  "content_scripts": [{
+    "matches": ["*://deanofstudents.utexas.edu/*"],
+    "js": [
+      "content.js",
+      "jquery.js"
+    ]
+  }],
   "permissions": [
-   "identity",
-   "activeTab",
-   "storage"
+     "identity",
+     "activeTab",
+     "storage"
    ],
     "background": {
       "scripts": [

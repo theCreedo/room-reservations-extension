@@ -1,13 +1,22 @@
 window.onload = function() {
 
+	
 	// This runs when id=submitRoomapp gets hit
 	document.getElementById('submitRoomapp').addEventListener('click', function() {
-		// Get all form data together
-		var data = getDeanFormData();
+		
+		chrome.identity.getAuthToken({'interactive': true}, function(token) {
+			// Get all form data together
+			var data = getDeanFormData();
 
-		// OAuth if needed
-
-		// Format data into excel format
+			// Format data into excel format
+			// let x = {
+			//   "values": [
+			//     {
+			//       object(CellData)
+			//     }
+			//   ]
+			// }
+		});
 
 	});
 }

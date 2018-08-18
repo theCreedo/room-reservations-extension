@@ -55,9 +55,23 @@ Correct `oauth.js` file format:
 - [Get Source HTML of current page from chrome extension StackOverflow](
 https://stackoverflow.com/questions/11684454/getting-the-source-html-of-the-current-page-from-chrome-extension)
 
+- [Replace All in Javascript code](https://stackoverflow.com/questions/1144783/how-to-replace-all-occurrences-of-a-string-in-javascript)
+
+- [Chrome Extension to use jquery to manipulate dom](https://carl-topham.com/theblog/post/creating-chrome-extension-uses-jquery-manipulate-dom-page/)
+
 # Self-Made Notes
 May need to learn React, but for now, I just want to get a base product running
 How do I read form data into data
+
+# Tech Debt
+
+- [] - Turn off reservation buttons when not on reservation screen
+
+- [] - Turn off creating spreadsheet
+
+- [] - Move all Javascript Files to a folder
+
+- [] - 
 
 # Log
 
@@ -65,15 +79,19 @@ How do I read form data into data
 
 - Made Dean of Students Reservation data way more cleaner
 
-- Redesigned chrome extension so that it displays 'Authorize Google' and 'Create Spreadsheet'
+- Redesigned chrome extension so that it displays 'Authorize Google', 'Create Spreadsheet', 'Get Room Info'
 
 - Used Google Sheets API to create spreadsheet
 
-- TODO: Find a way to save created  id and such and make the button to create Spreadsheet unclickable
+- added `content.js` in order to send html to the chrome extensions
+
+- Added Jquery.js file
+
+- Injected Jquery through background.js into the activeTab in order to use Jquery to get room data
+
+- TODO: Find a way to save spreadsheet id and such and change the button for 'Create Spreadsheet' unclickable
 
 - TODO: Create row data to send to google spreadsheet
-
-- TODO: Add eventListener for Submitting room app to send data to spreadsheet
 
 8/16/2018
 
