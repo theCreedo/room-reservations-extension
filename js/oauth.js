@@ -1,5 +1,10 @@
 window.onload = function() {
 
+
+	document.getElementById('display-info').addEventListener('click', function() {
+		window.open("/info.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+	});
+
 	// This runs when id=submitRoomapp gets hit
 	document.getElementById('get-sheets').addEventListener('click', function() {
 	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
@@ -49,6 +54,7 @@ window.onload = function() {
 							"majorDimension": "ROWS",
 							"values": [
 								[deanStudentsInfo.repData.rep_name,
+								"INSERT EVENT NAME",
 								"INSERT DATE",
 								deanStudentsInfo.times.startTime + "-" + deanStudentsInfo.times.endTime,
 								deanStudentsInfo.proposed_use,
@@ -347,7 +353,11 @@ window.onload = function() {
 	  	(async () =>  {
 	  		let init = {
 	          method: 'POST',
-	          body: JSON.stringify({}),
+	          body: JSON.stringify({
+	          	"properties": {
+    				"title": "Organization's Room Reservations"
+  				}
+	          }),
 	          headers: {
 	            Authorization: 'Bearer ' + token,
 	            'Content-Type': 'application/json'
@@ -361,6 +371,35 @@ window.onload = function() {
 			    //  A data saved callback omg so fancy
 			    console.log("spreadsheetId " + content.spreadsheetId + " has been saved")
 			});
+				chrome.storage.sync.get("spreadsheetId", function(items){
+					(async () =>  {
+							var spreadsheetId = items.spreadsheetId
+							var range = '!A:A'; // Fix this?
+							let init = {
+						      method: 'POST',
+						      // Build out the correct body
+				          	  body: JSON.stringify({
+								"range": range,
+								"majorDimension": "ROWS",
+								"values": [
+									['Rep Name', 'Name of Event', 'Date of Event', 'Time of Event', 'Proposed activity', 'Locations', 'Additional Comments']
+								]
+							  }),
+						      headers: {
+						        Authorization: 'Bearer ' + token
+						      },
+						      'contentType': 'json'
+						    };
+						    // Build out the correct endpoint
+							const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
+							init);
+							const content = await rawResponse.json();
+
+							console.log(content);
+
+					})();
+				});
+
 	     })();
 	  });
 	});

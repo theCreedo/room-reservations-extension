@@ -61,6 +61,10 @@ https://stackoverflow.com/questions/11684454/getting-the-source-html-of-the-curr
 
 - [Chrome Extension to use jquery to manipulate dom](https://carl-topham.com/theblog/post/creating-chrome-extension-uses-jquery-manipulate-dom-page/)
 
+- [Display data from Javascript Object](https://www.w3schools.com/lib/w3.js)
+
+- [Open a new window to display data](https://www.w3schools.com/jsref/met_win_open.asp)
+
 # Self-Made Notes
 May need to learn React, but for now, I just want to get a base product running
 How do I read form data into data
@@ -71,15 +75,15 @@ How do I read form data into data
 
 - [] - Turn off creating spreadsheet through button
 
-- [] - Move all Javascript Files to a folder
+- [X] - Organize files to folders
 
-- [] - Organize files/better renaming/directory management
+- [] - Better renaming/directory management
 
 - [] - Better data management behind the scenes
 
 - [] - Naming of spreadsheet when created
 
-- [] - Preview and Edit data
+- [] - Preview and Edit data/With Modal
 
 - [] - Better UI for popup.html
 
@@ -87,7 +91,21 @@ How do I read form data into data
 
 - [] - Add a small bit of testing and error handling
 
+- [] - change camelCase to underscore naming
+
+- [] - Add customization for fields in spreadsheet
+
 # Log
+
+8/20/2018
+
+- Created separate window to display dean of students reservation window.
+
+- Made the data editable and easily able to update to the object.
+
+- Added automatic naming of spreadsheet and filling in all the label boxes.
+
+- TODO: Bold and change background color of first row
 
 8/19/2018
 
