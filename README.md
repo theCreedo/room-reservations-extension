@@ -48,6 +48,8 @@ Correct `oauth.js` file format:
 
 - [chrome.storage](https://developer.chrome.com/extensions/storage) - Didn't use
 
+- [chrome.storage stackoverflow](https://stackoverflow.com/questions/5364062/how-can-i-save-information-locally-in-my-chrome-extension) - very helpful
+
 - [Stack Overflow for Chome Extension writing to Google Spreadsheet](https://stackoverflow.com/questions/20450438/chrome-extension-writing-to-google-spreadsheet)
 
 - [Google Spreadsheet Loader Github Library](https://github.com/vkadam/gsloader)
@@ -67,13 +69,47 @@ How do I read form data into data
 
 - [] - Turn off reservation buttons when not on reservation screen
 
-- [] - Turn off creating spreadsheet
+- [] - Turn off creating spreadsheet through button
 
 - [] - Move all Javascript Files to a folder
 
-- [] - 
+- [] - Organize files/better renaming/directory management
+
+- [] - Better data management behind the scenes
+
+- [] - Naming of spreadsheet when created
+
+- [] - Preview and Edit data
+
+- [] - Better UI for popup.html
+
+- [] - Clean up console.log print statments
+
+- [] - Add a small bit of testing and error handling
 
 # Log
+
+8/19/2018
+
+- Reformatted the data to contain the booleans of whether a checkmark was made
+
+- Added 'Get sheets ID from Spreadsheet' and 'Append Row '
+
+- Successfully created a request to apend a row to the google spreadsheet
+
+- TODO: Transfer all the actions into one single command executed by "Submit App" (need error checks)
+
+- TODO: Better format data sent for Spreadsheet
+
+- TODO: Add dropdown for naming room reservation events - Also use previewing can work
+
+- TODO: Previewing/Editing Data before sending it to the spreadsheet - Can have either automatic or preview of data
+
+- TODO: Figure out how to create a pop-up of some sort to prompt or display data and edit before updating
+
+8/18/2018
+
+- Did nothing
 
 8/17/2018
 
@@ -83,7 +119,7 @@ How do I read form data into data
 
 - Used Google Sheets API to create spreadsheet
 
-- added `content.js` in order to send html to the chrome extensions
+- Added `content.js` in order to send html to the chrome extensions
 
 - Added Jquery.js file
 

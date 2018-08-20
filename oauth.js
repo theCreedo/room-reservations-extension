@@ -1,6 +1,80 @@
 window.onload = function() {
 
 	// This runs when id=submitRoomapp gets hit
+	document.getElementById('get-sheets').addEventListener('click', function() {
+	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
+		chrome.storage.sync.get("spreadsheetId", function(items){
+			//  items = [ { "yourBody": "myBody" } ]
+			(async () =>  {
+			    var spreadsheetId = items.spreadsheetId;
+				let init = {
+			      method: 'GET',
+			      headers: {
+			        Authorization: 'Bearer ' + token
+			      },
+			      'contentType': 'json'
+			    };
+				const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '?&fields=sheets.properties',
+				init);
+				const content = await rawResponse.json();
+				chrome.storage.sync.set({ "sheetsIds": content.sheets }, function(){
+					console.log("Saved sheetsIds");
+					console.log(content.sheets);
+
+					console.log("This is the sheetsId: " + content.sheets[0].properties.sheetId);
+				});
+			})();
+		});
+	  });
+	});
+
+	document.getElementById('append-row').addEventListener('click', function() {
+	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
+		chrome.storage.sync.get("deanStudentsInfo", function(items){
+			chrome.storage.sync.get("spreadsheetId", function(spreadsheetContent){
+				chrome.storage.sync.get("sheetsIds", function(sheetContent){
+					//  items = [ { "yourBody": "myBody" } ]
+					console.log(items.deanStudentsInfo);
+					var deanStudentsInfo = items.deanStudentsInfo;
+					console.log(sheetContent.sheetsIds[0].properties.sheetId);
+					var sheetId = sheetContent.sheetsIds[0].properties.sheetId
+					var spreadsheetId = spreadsheetContent.spreadsheetId;
+					var range = '!A:A'; // Fix this?
+					(async () =>  {
+						let init = {
+					      method: 'POST',
+					      // Build out the correct body
+			          	  body: JSON.stringify({
+							"range": range,
+							"majorDimension": "ROWS",
+							"values": [
+								[deanStudentsInfo.repData.rep_name,
+								"INSERT DATE",
+								deanStudentsInfo.times.startTime + "-" + deanStudentsInfo.times.endTime,
+								deanStudentsInfo.proposed_use,
+								deanStudentsInfo.locations,
+								deanStudentsInfo.additional_comments]
+							]
+						  }),
+					      headers: {
+					        Authorization: 'Bearer ' + token
+					      },
+					      'contentType': 'json'
+					    };
+					    // Build out the correct endpoint
+						const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
+						init);
+						const content = await rawResponse.json();
+
+						console.log(content);
+					})();
+				});
+			});
+		});
+	  });
+	});
+
+
 	document.getElementById("submitRoomapp").addEventListener('click', () => {
 	    console.log("Popup DOM fully loaded and parsed");
 		function getDeanFormData() {
@@ -40,7 +114,8 @@ window.onload = function() {
 					var data = {
 						'listOfDays': listOfDays, 
 						'dateFrom':dateFrom,
-						'dateFrom':dateTo
+						'dateFrom':dateTo,
+						'isRepeating': isRepeating
 					}
 				} else {
 					var listOfDates = [
@@ -60,7 +135,8 @@ window.onload = function() {
 
 
 					var data = {
-						'dates':listOfDates
+						'dates':listOfDates,
+						'isRepeating': isRepeating
 					}
 				}
 
@@ -79,13 +155,16 @@ window.onload = function() {
 						'speakerAffiliation': speakerAffiliation,
 						'speakerName': speakerName,
 						'isSpeakerQuestions': isSpeakerQuestions,
-						'speakerTopic': speakerTopic
+						'speakerTopic': speakerTopic,
+						'isHostSpeaker': isHostSpeaker
 					}
 
 					return speakerData;
+				} else {
+					return {
+						'isHostSpeaker': isHostSpeaker
+					};
 				}
-
-				return null;
 			}
 
 			function getCosponsorData(isCosponsored) {
@@ -94,12 +173,15 @@ window.onload = function() {
 					var cosponsors = document.getElementById('co_sponsors').value;
 
 					var cosponsorData = {
-						'cosponsors': cosponsors
+						'cosponsors': cosponsors,
+						'isCosponsored': isCosponsored
 					}
 					return cosponsorData;
+				} else {
+					return {
+						'isCosponsored': isCosponsored
+					};
 				}
-
-				return null;
 			}
 
 			function getCollectingMoneyData(isCollectingMoney) {
@@ -108,12 +190,15 @@ window.onload = function() {
 					var solicitation_desc = document.getElementById('solicitation_type').value;
 
 					var collectingMoneyData = {
-						'solicitation_desc': solicitation_desc
+						'solicitation_desc': solicitation_desc,
+						'isCollectingMoney': isCollectingMoney
 					}
 					return collectingMoneyData;
+				} else {
+					return {
+						'isCollectingMoney': isCollectingMoney
+					};
 				}
-				
-				return null;
 			}
 
 			function getDistributingFoodData(isDistributingFood) {
@@ -122,12 +207,15 @@ window.onload = function() {
 					var distribution_descp = document.getElementById('describe_food').value;
 
 					var distributionData = {
-						'distribution_descp': distribution_descp
+						'distribution_descp': distribution_descp,
+						'isDistributingFood': isDistributingFood
 					}
 					return distributionData;
+				} else {
+					return {
+						'isDistributingFood': isDistributingFood
+					};
 				}
-				
-				return null;
 			}
 
 			// This runs when id=submitRoomapp gets hit
@@ -206,8 +294,8 @@ window.onload = function() {
 					'rep_phone_number': rep_phone_number,
 					'rep_email': rep_email,
 				},
-				'buildings': listOfBuildings,
-				'proposed_user': proposed_use,
+				'locations': listOfBuildings,
+				'proposed_use': proposed_use,
 				'room_capacity': room_capacity,
 				'times' : {
 					'startTime': startTime,
@@ -221,7 +309,6 @@ window.onload = function() {
 				'additional_comments': additional_comments
 			};
 
-			console.log(data);
 			return data;
 		}
 
@@ -237,8 +324,14 @@ window.onload = function() {
 		        console.log(data);
 		        console.log(data.orgname);
 
+				chrome.storage.sync.set({ "deanStudentsInfo": data }, function(){
+				    //  A data saved callback omg so fancy
+				    console.log("Dean of Students info saved:\n");
+				    console.log(data);
+				});
+
 		        // Create spreadsheet row data and send to Google
-		        
+
 		    });
 		});
 	});
@@ -264,8 +357,10 @@ window.onload = function() {
 			const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets',
 			init);
 			const content = await rawResponse.json();
-
-			console.log(content);
+			chrome.storage.sync.set({ "spreadsheetId": content.spreadsheetId }, function(){
+			    //  A data saved callback omg so fancy
+			    console.log("spreadsheetId " + content.spreadsheetId + " has been saved")
+			});
 	     })();
 	  });
 	});
