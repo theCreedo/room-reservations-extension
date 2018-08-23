@@ -6,13 +6,14 @@ MVP Goal #1:
 Read the University room reservation website for room reservation data, create a google sheets (need to be authed) and send that formatted data into the sheets
 
 Checklist:
-- [] - Google OAuth 2.0
-- [] - Read html data from Room Reservations Website
-- [] - Create Excel Spreadsheet
-- [] - Format and set data to saved Excel Spreadsheet
+- [X] - Google OAuth 2.0
+- [X] - Read html data from Room Reservations Website
+- [X] - Create Excel Spreadsheet
+- [X] - Format and set data to saved Excel Spreadsheet
+- [] - Add a user comprehensable flow/process for using extension
 
 Supported Reservation Sites:
-- [] - [Dean Of Students](https://deanofstudents.utexas.edu/secure/sa/roomapp.php)
+- [X] - [Dean Of Students](https://deanofstudents.utexas.edu/secure/sa/roomapp.php)
 
 - [] - [Event Space Reservations](https://ems.universityunions.utexas.edu/VirtualEms/) - Union, SAC, HMA, SSB, Outdoor
 
@@ -65,10 +66,6 @@ https://stackoverflow.com/questions/11684454/getting-the-source-html-of-the-curr
 
 - [Open a new window to display data](https://www.w3schools.com/jsref/met_win_open.asp)
 
-# Self-Made Notes
-May need to learn React, but for now, I just want to get a base product running
-How do I read form data into data
-
 # Tech Debt
 
 - [] - Turn off reservation buttons when not on reservation screen
@@ -81,9 +78,15 @@ How do I read form data into data
 
 - [] - Better data management behind the scenes
 
-- [] - Naming of spreadsheet when created
+- [X] - Naming of spreadsheet when created
 
-- [] - Preview and Edit data/With Modal
+- [] - Customization for spreadsheet name
+
+- [] - Customization for fields in spreadsheet
+
+- [X] - Preview and Edit data/With Window
+
+- [] - Better UI for info.html
 
 - [] - Better UI for popup.html
 
@@ -91,13 +94,23 @@ How do I read form data into data
 
 - [] - Add a small bit of testing and error handling
 
-- [] - change camelCase to underscore naming
+- [X] - change camelCase to underscore naming
 
-- [] - Add customization for fields in spreadsheet
+- [] - Create functions for repeated code
 
 # Log
 
+8/22/2018
+
+- Refatored naming from camelCase to under_score naming
+
+8/21/2018
+
+- Nothing
+
 8/20/2018
+
+- Improved directory hiearchy
 
 - Created separate window to display dean of students reservation window.
 

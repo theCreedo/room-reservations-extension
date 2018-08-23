@@ -1,51 +1,38 @@
 window.onload = function() {
 
-
-	document.getElementById('display-info').addEventListener('click', function() {
-		window.open("/info.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
-	});
-
-	// This runs when id=submitRoomapp gets hit
-	document.getElementById('get-sheets').addEventListener('click', function() {
+	document.getElementById('oauth').addEventListener('click', function() {
 	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
-		chrome.storage.sync.get("spreadsheetId", function(items){
-			//  items = [ { "yourBody": "myBody" } ]
-			(async () =>  {
-			    var spreadsheetId = items.spreadsheetId;
-				let init = {
-			      method: 'GET',
-			      headers: {
-			        Authorization: 'Bearer ' + token
-			      },
-			      'contentType': 'json'
-			    };
-				const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '?&fields=sheets.properties',
-				init);
-				const content = await rawResponse.json();
-				chrome.storage.sync.set({ "sheetsIds": content.sheets }, function(){
-					console.log("Saved sheetsIds");
-					console.log(content.sheets);
-
-					console.log("This is the sheetsId: " + content.sheets[0].properties.sheetId);
-				});
-			})();
-		});
+	  	console.log('Successfuly logged in: ' + token);
 	  });
 	});
 
-	document.getElementById('append-row').addEventListener('click', function() {
+	document.getElementById('create_spreadsheet').addEventListener('click', function() {
 	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
-		chrome.storage.sync.get("deanStudentsInfo", function(items){
-			chrome.storage.sync.get("spreadsheetId", function(spreadsheetContent){
-				chrome.storage.sync.get("sheetsIds", function(sheetContent){
-					//  items = [ { "yourBody": "myBody" } ]
-					console.log(items.deanStudentsInfo);
-					var deanStudentsInfo = items.deanStudentsInfo;
-					console.log(sheetContent.sheetsIds[0].properties.sheetId);
-					var sheetId = sheetContent.sheetsIds[0].properties.sheetId
-					var spreadsheetId = spreadsheetContent.spreadsheetId;
-					var range = '!A:A'; // Fix this?
-					(async () =>  {
+	  	(async () =>  {
+	  		let init = {
+	          method: 'POST',
+	          body: JSON.stringify({
+	          	"properties": {
+    				"title": "Organization's Room Reservations"
+  				}
+	          }),
+	          headers: {
+	            Authorization: 'Bearer ' + token,
+	            'Content-Type': 'application/json'
+	          },
+	          'contentType': 'json'
+	        };
+			const raw_response = await fetch('https://sheets.googleapis.com/v4/spreadsheets',
+			init);
+			const content = await raw_response.json();
+			chrome.storage.sync.set({ "spreadsheet_id": content.spreadsheetId }, function(){
+			    //  A data saved callback omg so fancy
+			    console.log("spreadsheet_id " + content.spreadsheetId + " has been saved")
+			});
+			chrome.storage.sync.get("spreadsheet_id", function(items){
+				(async () =>  {
+						var spreadsheet_id = items.spreadsheet_id
+						var range = '!A:A'; // Fix this?
 						let init = {
 					      method: 'POST',
 					      // Build out the correct body
@@ -53,13 +40,7 @@ window.onload = function() {
 							"range": range,
 							"majorDimension": "ROWS",
 							"values": [
-								[deanStudentsInfo.repData.rep_name,
-								"INSERT EVENT NAME",
-								"INSERT DATE",
-								deanStudentsInfo.times.startTime + "-" + deanStudentsInfo.times.endTime,
-								deanStudentsInfo.proposed_use,
-								deanStudentsInfo.locations,
-								deanStudentsInfo.additional_comments]
+								['Rep Name', 'Name of Event', 'Date of Event', 'Time of Event', 'Proposed activity', 'Locations', 'Additional Comments']
 							]
 						  }),
 					      headers: {
@@ -68,25 +49,24 @@ window.onload = function() {
 					      'contentType': 'json'
 					    };
 					    // Build out the correct endpoint
-						const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
+						const raw_response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheet_id + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
 						init);
-						const content = await rawResponse.json();
+						const content = await raw_response.json();
 
 						console.log(content);
-					})();
-				});
+
+				})();
 			});
-		});
+	     })();
 	  });
 	});
 
-
-	document.getElementById("submitRoomapp").addEventListener('click', () => {
+	document.getElementById("get_room_data").addEventListener('click', () => {
 	    console.log("Popup DOM fully loaded and parsed");
 		function getDeanFormData() {
-			function getReservationDates(isRepeating) {
-				if (isRepeating) {
-					var DayNamesEnums = {
+			function getReservationDates(is_repeating) {
+				if (is_repeating) {
+					var day_names_enms = {
 						SUNDAY: 1,
 						MONDAY: 2,
 						TUESDAY: 3,
@@ -96,35 +76,35 @@ window.onload = function() {
 						SATURDAY: 7,
 					};
 
-					var isSun = $('#proposed_day1').is(':checked');
-					var isMon = $('#proposed_day2').is(':checked');
-					var isTues = $('#proposed_day3').is(':checked');
-					var isWed = $('#proposed_day4').is(':checked');
-					var isThur = $('#proposed_day5').is(':checked');
-					var isFri = $('#proposed_day6').is(':checked');
-					var isSat = $('#proposed_day7').is(':checked');
+					var is_sun = $('#proposed_day1').is(':checked');
+					var is_mon = $('#proposed_day2').is(':checked');
+					var is_tues = $('#proposed_day3').is(':checked');
+					var is_wed = $('#proposed_day4').is(':checked');
+					var is_thurs = $('#proposed_day5').is(':checked');
+					var is_fri = $('#proposed_day6').is(':checked');
+					var is_sat = $('#proposed_day7').is(':checked');
 
-					var listOfDays = {
-						isSun,
-						isMon,
-						isTues,
-						isWed,
-						isThur,
-						isFri,
-						isSat
+					var list_of_days = {
+						is_sun,
+						is_mon,
+						is_tues,
+						is_wed,
+						is_thurs,
+						is_fri,
+						is_sat
 					}
 
-					var dateFrom = document.getElementById('dateFrom').value;
-					var dateTo = document.getElementById('dateTo').value;
+					var date_from = document.getElementById('dateFrom').value;
+					var date_to = document.getElementById('dateTo').value;
 
 					var data = {
-						'listOfDays': listOfDays, 
-						'dateFrom':dateFrom,
-						'dateFrom':dateTo,
-						'isRepeating': isRepeating
+						'list_of_days': list_of_days, 
+						'date_from':date_from,
+						'date_to':date_to,
+						'is_repeating': is_repeating
 					}
 				} else {
-					var listOfDates = [
+					var list_of_dates = [
 						 document.getElementById('firstDate').value,
 						 document.getElementById('secondDate').value,
 						 document.getElementById('thirdDate').value,
@@ -136,90 +116,92 @@ window.onload = function() {
 						 document.getElementById('ninthDate').value
 					];
 
-					var dateFrom = document.getElementById('dateFrom').value;
-					var dateTo = document.getElementById('dateTo').value;
+					var date_from = document.getElementById('dateFrom').value;
+					var date_to = document.getElementById('dateTo').value;
 
 
 					var data = {
-						'dates':listOfDates,
-						'isRepeating': isRepeating
+						'dates': list_of_dates,
+						'date_from': date_from,
+						'date_to': date_to,
+						'is_repeating': is_repeating
 					}
 				}
 
 				return data
 			}
 
-			function getHostSpeakerData(isHostSpeaker) {
-				if (isHostSpeaker) {
+			function getHostSpeakerData(is_host_speaker) {
+				if (is_host_speaker) {
 					// implementation of data collection
-					var speakerAffiliation = document.getElementById('speakercomp').value;
-					var speakerName = document.getElementById('SpeakerName').value;
-					var isSpeakerQuestions = $('#bSpeakerQuestions1').is(':checked');
-					var speakerTopic = document.getElementById('SpeakerTopic').value;
+					var speak_affiliation = document.getElementById('speakercomp').value;
+					var speaker_name = document.getElementById('SpeakerName').value;
+					var is_speaker_questions = $('#bSpeakerQuestions1').is(':checked');
+					var speaker_topic = document.getElementById('SpeakerTopic').value;
 
-					var speakerData = {
-						'speakerAffiliation': speakerAffiliation,
-						'speakerName': speakerName,
-						'isSpeakerQuestions': isSpeakerQuestions,
-						'speakerTopic': speakerTopic,
-						'isHostSpeaker': isHostSpeaker
+					var speaker_data = {
+						'speak_affiliation': speak_affiliation,
+						'speaker_name': speaker_name,
+						'is_speaker_questions': is_speaker_questions,
+						'speaker_topic': speaker_topic,
+						'is_host_speaker': is_host_speaker
 					}
 
-					return speakerData;
+					return speaker_data;
 				} else {
 					return {
-						'isHostSpeaker': isHostSpeaker
+						'is_host_speaker': is_host_speaker
 					};
 				}
 			}
 
-			function getCosponsorData(isCosponsored) {
-				if (isCosponsored) {
+			function getCosponsorData(is_cosponsored) {
+				if (is_cosponsored) {
 					// implementation of data collection
 					var cosponsors = document.getElementById('co_sponsors').value;
 
-					var cosponsorData = {
+					var cosponsor_data = {
 						'cosponsors': cosponsors,
-						'isCosponsored': isCosponsored
+						'is_cosponsored': is_cosponsored
 					}
-					return cosponsorData;
+					return cosponsor_data;
 				} else {
 					return {
-						'isCosponsored': isCosponsored
+						'is_cosponsored': is_cosponsored
 					};
 				}
 			}
 
-			function getCollectingMoneyData(isCollectingMoney) {
-				if (isCollectingMoney) {
+			function getCollectingMoneyData(is_collecting_money) {
+				if (is_collecting_money) {
 					// implementation of data collection
 					var solicitation_desc = document.getElementById('solicitation_type').value;
 
-					var collectingMoneyData = {
+					var collecting_money_data = {
 						'solicitation_desc': solicitation_desc,
-						'isCollectingMoney': isCollectingMoney
+						'is_collecting_money': is_collecting_money
 					}
-					return collectingMoneyData;
+					return collecting_money_data;
 				} else {
 					return {
-						'isCollectingMoney': isCollectingMoney
+						'is_collecting_money': is_collecting_money
 					};
 				}
 			}
 
-			function getDistributingFoodData(isDistributingFood) {
-				if (isDistributingFood) {
+			function getDistributingFoodData(is_distributing_food) {
+				if (is_distributing_food) {
 					// implementation of data collection
 					var distribution_descp = document.getElementById('describe_food').value;
 
-					var distributionData = {
+					var distributing_food_data = {
 						'distribution_descp': distribution_descp,
-						'isDistributingFood': isDistributingFood
+						'is_distributing_food': is_distributing_food
 					}
-					return distributionData;
+					return distributing_food_data;
 				} else {
 					return {
-						'isDistributingFood': isDistributingFood
+						'is_distributing_food': is_distributing_food
 					};
 				}
 			}
@@ -242,76 +224,76 @@ window.onload = function() {
 			var room_choice2 = document.getElementsByName('room_choice2');
 			var room_choice3 = document.getElementsByName('room_choice3');
 
-			var listOfBuildings =
+			var list_of_buildings =
 			building_choice1[0].value + ' ' + room_choice1[0].value + ', ' +
 			building_choice2[0].value + ' ' + room_choice2[0].value + ', ' +
 			building_choice3[0].value + ' ' + room_choice3[0].value;
 
-			var listOfOrgs = document.getElementsByClassName('orgsdropdown');
+			var list_of_orgs = document.getElementsByClassName('orgsdropdown');
 
-			// need to add null condition for listOfOrgs
-			var orgDropdownName =  Array.prototype.slice.call(listOfOrgs).find(function(element) {
+			// need to add null condition for list_of_orgs
+			var org_dropdown_name =  Array.prototype.slice.call(list_of_orgs).find(function(element) {
 				return element.attributes.style.value.includes('visible');
 			}).name;
-			var orgName = $('#' + orgDropdownName + ' option:selected').text();
+			var org_name = $('#' + org_dropdown_name + ' option:selected').text();
 			var proposed_use = document.getElementById('proposed_use').value;
 
 			var room_capacity =document.getElementById('number_expected').value;
-			var startHour = parseInt($('#startHour option:selected').text());
-			var startMinute = $('#startMinute option:selected').text();
-			var startSuffix = $('#startSuffix option:selected').text();
-			var startTime = ''
-			if (startSuffix == 'noon') {
-				startTime = '12:00PM';
+			var start_hour = parseInt($('#startHour option:selected').text());
+			var start_minute = $('#startMinute option:selected').text();
+			var start_suffix = $('#startSuffix option:selected').text();
+			var start_time = ''
+			if (start_suffix == 'noon') {
+				start_time = '12:00PM';
 			} else {
-				startTime = startHour + ':' + startMinute + startSuffix.toUpperCase().split(".").join("");
+				start_time = start_hour + ':' + start_minute + start_suffix.toUpperCase().split(".").join("");
 			}
 
-			var endHour = parseInt($('#endHour option:selected').text());
-			var endMinute = $('#endMinute option:selected').text()
-			var endSuffix = $('#endSuffix option:selected').text();
-			var endTime = ''
-			if (endSuffix == 'noon') {
-				endTime = '12:00PM';
+			var end_hour = parseInt($('#endHour option:selected').text());
+			var end_minute = $('#endMinute option:selected').text()
+			var end_suffix = $('#endSuffix option:selected').text();
+			var end_time = ''
+			if (end_suffix == 'noon') {
+				end_time = '12:00PM';
 			} else {
-				endTime =  endHour + ':' + endMinute + endSuffix.toUpperCase().split(".").join("");
+				end_time =  end_hour + ':' + end_minute + end_suffix.toUpperCase().split(".").join("");
 			}
 
 
-			var isRepeating = $('#restype1').is(':checked');
-			var isHostSpeaker = $('#bOffCampusSpeaker1').is(':checked');
-			var isCosponsored = $('#activity_sponsored_solely2').is(':checked');
-			var isCollectingMoney= $('#collect_money1').is(':checked');
-			var isDistributingFood = $('#sale_of_food1').is(':checked');
+			var is_repeating = $('#restype1').is(':checked');
+			var is_host_speaker = $('#bOffCampusSpeaker1').is(':checked');
+			var is_cosponsored = $('#activity_sponsored_solely2').is(':checked');
+			var is_collecting_money = $('#collect_money1').is(':checked');
+			var is_distributing_food = $('#sale_of_food1').is(':checked');
 
-			var reservationDatesData = getReservationDates(isRepeating);
-			var hostSpeakerData = getHostSpeakerData(isHostSpeaker);
-			var cosponsorData = getCosponsorData(isCosponsored);
-			var collectingMoneyData = getCollectingMoneyData(isCollectingMoney);
-			var distributingFoodData = getDistributingFoodData(isDistributingFood);
+			var reservation_dates_data = getReservationDates(is_repeating);
+			var host_speaker_data = getHostSpeakerData(is_host_speaker);
+			var cosponsor_data = getCosponsorData(is_cosponsored);
+			var collecting_money_data = getCollectingMoneyData(is_collecting_money);
+			var distributing_food_data = getDistributingFoodData(is_distributing_food);
 
 			var additional_comments = document.getElementById('stu_comments').value;
 
 
 			var data = {
-				'orgname': orgName,
-				'repData' : {
+				'org_name': org_name,
+				'rep_data' : {
 					'rep_name': rep,
 					'rep_phone_number': rep_phone_number,
 					'rep_email': rep_email,
 				},
-				'locations': listOfBuildings,
+				'locations': list_of_buildings,
 				'proposed_use': proposed_use,
 				'room_capacity': room_capacity,
 				'times' : {
-					'startTime': startTime,
-					'endTime': endTime,
+					'start_time': start_time,
+					'end_time': end_time,
 				},
-				'reservationDatesData': reservationDatesData,
-				'hostSpeakerData': hostSpeakerData,
-				'cosponsorData': cosponsorData,
-				'collectingMoneyData': collectingMoneyData,
-				'distributingFoodData': distributingFoodData,
+				'reservation_dates_data': reservation_dates_data,
+				'host_speaker_data': host_speaker_data,
+				'cosponsor_data': cosponsor_data,
+				'collecting_money_data': collecting_money_data,
+				'distributing_food_data': distributing_food_data,
 				'additional_comments': additional_comments
 			};
 
@@ -328,9 +310,9 @@ window.onload = function() {
 		        //Here we have just the innerHTML and not DOM structure
 		        console.log('Popup script:')
 		        console.log(data);
-		        console.log(data.orgname);
+		        console.log(data.org_name);
 
-				chrome.storage.sync.set({ "deanStudentsInfo": data }, function(){
+				chrome.storage.sync.set({ "dean_students_info": data }, function(){
 				    //  A data saved callback omg so fancy
 				    console.log("Dean of Students info saved:\n");
 				    console.log(data);
@@ -342,65 +324,51 @@ window.onload = function() {
 		});
 	});
 
-	document.getElementById('oauth').addEventListener('click', function() {
-	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
-	  	console.log('Successfuly logged in: ' + token);
-	  });
+	document.getElementById('display_info').addEventListener('click', function() {
+		window.open("/info.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
 	});
 
-	document.getElementById('create-spreadsheet').addEventListener('click', function() {
+	document.getElementById('append_row').addEventListener('click', function() {
 	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
-	  	(async () =>  {
-	  		let init = {
-	          method: 'POST',
-	          body: JSON.stringify({
-	          	"properties": {
-    				"title": "Organization's Room Reservations"
-  				}
-	          }),
-	          headers: {
-	            Authorization: 'Bearer ' + token,
-	            'Content-Type': 'application/json'
-	          },
-	          'contentType': 'json'
-	        };
-			const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets',
-			init);
-			const content = await rawResponse.json();
-			chrome.storage.sync.set({ "spreadsheetId": content.spreadsheetId }, function(){
-			    //  A data saved callback omg so fancy
-			    console.log("spreadsheetId " + content.spreadsheetId + " has been saved")
+		chrome.storage.sync.get("dean_students_info", function(items){
+			chrome.storage.sync.get("spreadsheet_id", function(spread_sheet_content){
+				//  items = [ { "yourBody": "myBody" } ]
+				console.log(items.dean_students_info);
+				var dean_students_info = items.dean_students_info;
+				var spreadsheet_id = spread_sheet_content.spreadsheet_id;
+				var range = '!A:A'; // Fix this?
+				(async () =>  {
+					let init = {
+				      method: 'POST',
+				      // Build out the correct body
+		          	  body: JSON.stringify({
+						"range": range,
+						"majorDimension": "ROWS",
+						"values": [
+							[dean_students_info.rep_data.rep_name,
+							"INSERT EVENT NAME",
+							"INSERT DATE",
+							dean_students_info.times.start_time + "-" + dean_students_info.times.end_time,
+							dean_students_info.proposed_use,
+							dean_students_info.locations,
+							dean_students_info.additional_comments]
+						]
+					  }),
+				      headers: {
+				        Authorization: 'Bearer ' + token
+				      },
+				      'contentType': 'json'
+				    };
+				    // Build out the correct endpoint
+					const raw_response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheet_id + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
+					init);
+					const content = await raw_response.json();
+
+					console.log(content);
+				})();
 			});
-				chrome.storage.sync.get("spreadsheetId", function(items){
-					(async () =>  {
-							var spreadsheetId = items.spreadsheetId
-							var range = '!A:A'; // Fix this?
-							let init = {
-						      method: 'POST',
-						      // Build out the correct body
-				          	  body: JSON.stringify({
-								"range": range,
-								"majorDimension": "ROWS",
-								"values": [
-									['Rep Name', 'Name of Event', 'Date of Event', 'Time of Event', 'Proposed activity', 'Locations', 'Additional Comments']
-								]
-							  }),
-						      headers: {
-						        Authorization: 'Bearer ' + token
-						      },
-						      'contentType': 'json'
-						    };
-						    // Build out the correct endpoint
-							const rawResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
-							init);
-							const content = await rawResponse.json();
-
-							console.log(content);
-
-					})();
-				});
-
-	     })();
+		});
 	  });
 	});
+
 };

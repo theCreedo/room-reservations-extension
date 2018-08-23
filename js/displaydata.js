@@ -1,30 +1,30 @@
-chrome.storage.sync.get("deanStudentsInfo", function(items){
-	var deanStudentsInfo= items.deanStudentsInfo;
-	document.getElementById("rep_name").value = deanStudentsInfo.repData.rep_name;
-	document.getElementById("rep_phone_number").value = deanStudentsInfo.repData.rep_phone_number;
-	document.getElementById("rep_email").value = deanStudentsInfo.repData.rep_email;
-	document.getElementById("orgname").value = deanStudentsInfo.orgname;
-	document.getElementById("locations").value = deanStudentsInfo.locations;
-	document.getElementById("startTime").value = deanStudentsInfo.times.startTime;
-	document.getElementById("endTime").value = deanStudentsInfo.times.endTime;
-	console.log(deanStudentsInfo);
+chrome.storage.sync.get("dean_students_info", function(items){
+	var dean_students_info= items.dean_students_info;
+	document.getElementById("rep_name").value = dean_students_info.rep_data.rep_name;
+	document.getElementById("rep_phone_number").value = dean_students_info.rep_data.rep_phone_number;
+	document.getElementById("rep_email").value = dean_students_info.rep_data.rep_email;
+	document.getElementById("org_name").value = dean_students_info.org_name;
+	document.getElementById("locations").value = dean_students_info.locations;
+	document.getElementById("start_time").value = dean_students_info.times.start_time;
+	document.getElementById("end_time").value = dean_students_info.times.end_time;
+	console.log(dean_students_info);
 });
 
 window.onload = function() {
 	document.getElementById('update-data').addEventListener('click', function() {
-		chrome.storage.sync.get("deanStudentsInfo", function(items){
-			var deanStudentsInfo= items.deanStudentsInfo;
+		chrome.storage.sync.get("dean_students_info", function(items){
+			var dean_students_info= items.dean_students_info;
 
-			deanStudentsInfo.repData.rep_name = document.getElementById("rep_name").value;
-			deanStudentsInfo.repData.rep_phone_number = document.getElementById("rep_phone_number").value;
-			deanStudentsInfo.repData.rep_email = document.getElementById("rep_email").value;
-			deanStudentsInfo.orgname = document.getElementById("orgname").value;
-			deanStudentsInfo.listOfBuildings = document.getElementById("locations").value;
-			deanStudentsInfo.times.startTime = document.getElementById("startTime").value;
-			deanStudentsInfo.times.endTime = document.getElementById("endTime").value;
-			chrome.storage.sync.set({ "deanStudentsInfo": deanStudentsInfo }, function(){
-			    console.log("Updated deanStudentsInfo:");
-			    console.log(deanStudentsInfo);
+			dean_students_info.rep_data.rep_name = document.getElementById("rep_name").value;
+			dean_students_info.rep_data.rep_phone_number = document.getElementById("rep_phone_number").value;
+			dean_students_info.rep_data.rep_email = document.getElementById("rep_email").value;
+			dean_students_info.org_name = document.getElementById("org_name").value;
+			dean_students_info.locations = document.getElementById("locations").value;
+			dean_students_info.times.start_time = document.getElementById("start_time").value;
+			dean_students_info.times.endTime = document.getElementById("endTime").value;
+			chrome.storage.sync.set({ "dean_students_info": dean_students_info }, function(){
+			    console.log("Updated dean_students_info:");
+			    console.log(dean_students_info);
 			});
 		});
 	});
