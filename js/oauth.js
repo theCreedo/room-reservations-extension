@@ -32,10 +32,9 @@ window.onload = function() {
 			chrome.storage.sync.get("spreadsheet_id", function(items){
 				(async () =>  {
 						var spreadsheet_id = items.spreadsheet_id
-						var range = '!A:A'; // Fix this?
+						var range = '!A:A';
 						let init = {
 					      method: 'POST',
-					      // Build out the correct body
 			          	  body: JSON.stringify({
 							"range": range,
 							"majorDimension": "ROWS",
@@ -48,7 +47,6 @@ window.onload = function() {
 					      },
 					      'contentType': 'json'
 					    };
-					    // Build out the correct endpoint
 						const raw_response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheet_id + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
 						init);
 						const content = await raw_response.json();
@@ -206,7 +204,6 @@ window.onload = function() {
 				}
 			}
 
-			// This runs when id=submitRoomapp gets hit
 			var script = document.createElement('script');
 			script.src = 'https://code.jquery.com/jquery-3.3.1.min.js';
 			script.type = 'text/javascript';
@@ -259,7 +256,6 @@ window.onload = function() {
 				end_time =  end_hour + ':' + end_minute + end_suffix.toUpperCase().split(".").join("");
 			}
 
-
 			var is_repeating = $('#restype1').is(':checked');
 			var is_host_speaker = $('#bOffCampusSpeaker1').is(':checked');
 			var is_cosponsored = $('#activity_sponsored_solely2').is(':checked');
@@ -289,6 +285,7 @@ window.onload = function() {
 					'start_time': start_time,
 					'end_time': end_time,
 				},
+				'event_name': 'Generic Event',
 				'reservation_dates_data': reservation_dates_data,
 				'host_speaker_data': host_speaker_data,
 				'cosponsor_data': cosponsor_data,
@@ -302,24 +299,16 @@ window.onload = function() {
 
 
 		chrome.identity.getAuthToken({'interactive': true}, function(token) {
-		    //We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
+		    // We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
 		    chrome.tabs.executeScript({
 		        code: '(' + getDeanFormData + ')();' //argument here is a string but function.toString() returns function's code
 		    }, (results) => {
 		    	var data = results[0]
-		        //Here we have just the innerHTML and not DOM structure
-		        console.log('Popup script:')
-		        console.log(data);
-		        console.log(data.org_name);
-
 				chrome.storage.sync.set({ "dean_students_info": data }, function(){
 				    //  A data saved callback omg so fancy
 				    console.log("Dean of Students info saved:\n");
 				    console.log(data);
 				});
-
-		        // Create spreadsheet row data and send to Google
-
 		    });
 		});
 	});
@@ -332,22 +321,29 @@ window.onload = function() {
 	  chrome.identity.getAuthToken({'interactive': true}, function(token) {
 		chrome.storage.sync.get("dean_students_info", function(items){
 			chrome.storage.sync.get("spreadsheet_id", function(spread_sheet_content){
-				//  items = [ { "yourBody": "myBody" } ]
 				console.log(items.dean_students_info);
 				var dean_students_info = items.dean_students_info;
 				var spreadsheet_id = spread_sheet_content.spreadsheet_id;
-				var range = '!A:A'; // Fix this?
+				var dates = '';
+				if (dean_students_info.is_repeating) {
+					dates = dean_students_info.reservation_dates_data.date_from + ' - ' + dean_students_info.reservation_dates_data.date_to;
+				} else {
+					var i = 0;
+					for (i = 0; i < dean_students_info.list_of_dates.size; i++) {
+						dates += dean_students_info.list_of_dates[i];
+					}
+				}
+				var range = '!A:A';
 				(async () =>  {
 					let init = {
 				      method: 'POST',
-				      // Build out the correct body
 		          	  body: JSON.stringify({
 						"range": range,
 						"majorDimension": "ROWS",
 						"values": [
 							[dean_students_info.rep_data.rep_name,
 							"INSERT EVENT NAME",
-							"INSERT DATE",
+							dates,
 							dean_students_info.times.start_time + "-" + dean_students_info.times.end_time,
 							dean_students_info.proposed_use,
 							dean_students_info.locations,
@@ -359,7 +355,6 @@ window.onload = function() {
 				      },
 				      'contentType': 'json'
 				    };
-				    // Build out the correct endpoint
 					const raw_response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheet_id + '/values/' + range + ':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
 					init);
 					const content = await raw_response.json();

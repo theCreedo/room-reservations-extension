@@ -100,6 +100,12 @@ https://stackoverflow.com/questions/11684454/getting-the-source-html-of-the-curr
 
 # Log
 
+8/23/2018
+
+- Added default event name to json data along with all other parts
+
+- Cleaned up print statements
+
 8/22/2018
 
 - Refatored naming from camelCase to under_score naming
