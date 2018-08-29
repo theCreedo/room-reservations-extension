@@ -22,6 +22,44 @@ Design:
 - createSpreedsheet function
 - button to read data from html
 
+# Database Design
+
+1.0
+- Profile
+	- ID (based on Google ID? or generated through extension and database stuff)
+	- Google Profile Info
+	- Google Access token
+	- Current GroupID = Spreadhsheet id?
+	- GroupID Array - (Later add on groupID array - Need authorization to add groupID)
+	- Current Group Data
+		- Row data array
+		- Name of Spreadsheet
+		- How data is formatted in Row data? (Set Constants) - maybe a list of row data times
+
+# Flows
+
+Org flow
+
+- New org
+
+- Existing Org
+
+
+Row flow
+
+- Will start off with some row data
+
+- Show which sheet to add to (opt.)
+
+- Have the row data editable before sending
+
+- Have row data displayed and editable after sending
+
+Semester flow
+
+- 
+
+
 # Getting Started
 
 I followed this [How to Create a Chrome Extension in 10 Minutes Flat](https://www.sitepoint.com/create-chrome-extension-10-minutes-flat/) guide. It took less than 10 mins to create - then about 30 mins to actually test and make sure it worked... I guess the advertising wasn't incorrect.
@@ -68,11 +106,17 @@ https://stackoverflow.com/questions/11684454/getting-the-source-html-of-the-curr
 
 # Tech Debt
 
-- [] - Turn off reservation buttons when not on reservation screen
+- [] - Organize data to new data design model
+
+- [] - Profile.html - need login/register - figure out how to do it through google
+
+- [] - Add row identifier + sheet for where
 
 - [] - Turn off creating spreadsheet through button
 
 - [X] - Organize files to folders
+
+- [] - Turn off reservation buttons when not on reservation screen
 
 - [] - Better renaming/directory management
 
@@ -98,7 +142,43 @@ https://stackoverflow.com/questions/11684454/getting-the-source-html-of-the-curr
 
 - [] - Create functions for repeated code
 
+- [] - Create multiple user editing a single document - GroupID and Global Database (rip work)
+
+- [] - Create multiple Orgs/groups to access
+
+- [] - Create Semester-based sheets for room reservations
+
 # Log
+
+8/29/2018
+
+- Designing out how data can be stored in googe.storage - Decision need to be made on how data stored
+
+- Profile
+	- ID (based on Google ID? or generated through extension and database stuff)
+	- Google Profile Info
+	- Google Access token
+	- Current GroupID = Spreadhsheet id?
+	- GroupID Array - (Later add on groupID array - Need authorization to add groupID)
+	- Current Group Data
+		- Row data array
+		- Name of Spreadsheet
+		- How data is formatted in Row data? (Set Constants) - maybe a list of row data times
+
+- Flows: New Org, New Row, New Semester (Opt.)
+
+- TODO: Get info from google profile
+
+- TODO: Look into Google Styling materials?
+
+- TODO: Look into Angular or Vue
+
+- Question: Is there a way in order to set up a spreadsheet that multiple users can access?
+	- Group ID - Need to set up a database... rip
+
+8/24-28/2018
+
+- Nothing
 
 8/23/2018
 

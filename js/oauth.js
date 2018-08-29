@@ -59,6 +59,12 @@ window.onload = function() {
 	  });
 	});
 
+
+	document.getElementById('edit-data').addEventListener('click', function() {
+		// If there is no spreadsheet
+	  window.open("/spreadsheet.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+	});
+
 	document.getElementById("get_room_data").addEventListener('click', () => {
 	    console.log("Popup DOM fully loaded and parsed");
 		function getDeanFormData() {
